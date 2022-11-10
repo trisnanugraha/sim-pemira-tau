@@ -1,19 +1,20 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Lahan extends MY_Controller
+class Paslon extends MY_Controller
 {
 
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Mod_lahan');
+        $this->load->model('Mod_paslon');
     }
 
     public function index()
     {
-        $data['judul'] = 'Lahan';
-        $data['modal_tambah'] = show_my_modal('lahan/modal_tambah_lahan', $data);
+        $data['judul'] = 'Data Pasangan Calon';
+        $data['paslon'] = $this->Mod_paslon->get_all();
+        $data['modal_tambah'] = show_my_modal('paslon/modal_tambah_paslon', $data);
 
         $logged_in = $this->session->userdata('logged_in');
         if ($logged_in != TRUE || empty($logged_in)) {
@@ -21,12 +22,9 @@ class Lahan extends MY_Controller
         } else {
             $checklevel = $this->session->userdata('hak_akses');
 
-            if ($checklevel == 'Guest') {
-                $js = $this->load->view('lahan/lahan-guest-js', null, true);
-                $this->template->views('lahan/home-guest', $data, $js);
-            } else {
-                $js = $this->load->view('lahan/lahan-js', null, true);
-                $this->template->views('lahan/home', $data, $js);
+            if ($checklevel != 'Guest') {
+                $js = $this->load->view('paslon/paslon-js', null, true);
+                $this->template->views('paslon/home', $data, $js);
             }
         }
     }
@@ -35,24 +33,23 @@ class Lahan extends MY_Controller
     {
         ini_set('memory_limit', '512M');
         set_time_limit(3600);
-        $list = $this->Mod_lahan->get_datatables();
+        $list = $this->Mod_paslon->get_datatables();
         $data = array();
         $no = $_POST['start'];
-        foreach ($list as $lahan) {
+        foreach ($list as $paslon) {
             $no++;
             $row = array();
             $row[] = $no;
-            $row[] = $lahan->lokasi;
-            $row[] = $lahan->longitude;
-            $row[] = $lahan->latitude;
-            $row[] = $lahan->id_lahan;
+            $row[] = $paslon->jumlah_panen;
+            $row[] = $paslon->jumlah_hasil;
+            $row[] = $paslon->id_panen;
             $data[] = $row;
         }
 
         $output = array(
             "draw" => $_POST['draw'],
-            "recordsTotal" => $this->Mod_lahan->count_all(),
-            "recordsFiltered" => $this->Mod_lahan->count_filtered(),
+            "recordsTotal" => $this->Mod_paslon->count_all(),
+            "recordsFiltered" => $this->Mod_paslon->count_filtered(),
             "data" => $data,
         );
         //output to json format
@@ -61,7 +58,7 @@ class Lahan extends MY_Controller
 
     public function edit($id)
     {
-        $data = $this->Mod_lahan->get_lahan($id);
+        $data = $this->Mod_panen->get_panen($id);
         echo json_encode($data);
     }
 
@@ -71,11 +68,11 @@ class Lahan extends MY_Controller
 
         $post = $this->input->post();
 
-        $this->lokasi = $post['lokasi'];
-        $this->longitude = $post['longitude'];
-        $this->latitude = $post['latitude'];
+        $this->id_lahan = $post['id_lahan'];
+        $this->jumlah_panen = $post['jumlah_panen'];
+        $this->jumlah_hasil = $post['jumlah_hasil'];
 
-        $this->Mod_lahan->insert($this);
+        $this->Mod_panen->insert($this);
         echo json_encode(array("status" => TRUE));
     }
 
@@ -85,19 +82,19 @@ class Lahan extends MY_Controller
         $id      = $this->input->post('id_lahan');
         $post = $this->input->post();
 
-        $this->lokasi = $post['lokasi'];
-        $this->longitude = $post['longitude'];
-        $this->latitude = $post['latitude'];
+        $this->id_lahan = $post['id_lahan'];
+        $this->jumlah_panen = $post['jumlah_panen'];
+        $this->jumlah_hasil = $post['jumlah_hasil'];
 
-        $this->Mod_lahan->update($id, $this);
+        $this->Mod_panen->update($id, $this);
         echo json_encode(array("status" => TRUE));
     }
 
     public function delete()
     {
-        $id = $this->input->post('id_lahan');
+        $id = $this->input->post('id_panen');
 
-        $this->Mod_lahan->delete($id);
+        $this->Mod_panen->delete($id);
         echo json_encode(array("status" => TRUE));
     }
 
@@ -108,21 +105,21 @@ class Lahan extends MY_Controller
         $data['inputerror'] = array();
         $data['status'] = TRUE;
 
-        if ($this->input->post('lokasi') == '') {
-            $data['inputerror'][] = 'lokasi';
+        if ($this->input->post('id_lahan') == '') {
+            $data['inputerror'][] = 'id_lahan';
             $data['error_string'][] = 'Lahan Tidak Boleh Kosong';
             $data['status'] = FALSE;
         }
 
-        if ($this->input->post('longitude') == '') {
-            $data['inputerror'][] = 'longitude';
-            $data['error_string'][] = 'Longitude Tidak Boleh Kosong';
+        if ($this->input->post('jumlah_panen') == '') {
+            $data['inputerror'][] = 'jumlah_panen';
+            $data['error_string'][] = 'Jumlah Panen Tidak Boleh Kosong';
             $data['status'] = FALSE;
         }
 
-        if ($this->input->post('latitude') == '') {
-            $data['inputerror'][] = 'latitude';
-            $data['error_string'][] = 'Latitude Tidak Boleh Kosong';
+        if ($this->input->post('jumlah_hasil') == '') {
+            $data['inputerror'][] = 'jumlah_hasil';
+            $data['error_string'][] = 'Jumlah Hasil Tidak Boleh Kosong';
             $data['status'] = FALSE;
         }
 
@@ -133,4 +130,4 @@ class Lahan extends MY_Controller
     }
 }
 
-/* End of file Lahan.php */
+/* End of file Paslon.php */

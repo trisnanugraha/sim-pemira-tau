@@ -14,21 +14,17 @@ class Dashboard extends MY_Controller
         $this->load->model('Mod_userlevel');
         $this->load->model('Mod_aktivasi_user');
         $this->load->model('Mod_userlevel');
-        $this->load->model('Mod_lahan');
-        $this->load->model('Mod_budidaya');
-        $this->load->model('Mod_panen');
-        $this->load->model('Mod_tanam');
         $this->load->model('Mod_dashboard');
+        $this->load->model('Mod_fakultas');
+        $this->load->model('Mod_prodi');
         // backButtonHandle();
     }
 
     function index()
     {
         $data['judul'] = 'Dashboard';
-        $data['lahan'] = $this->Mod_lahan->total_rows();
-        $data['budidaya'] = $this->Mod_budidaya->total_rows();
-        $data['panen'] = $this->Mod_panen->total_rows();
-        $data['tanam'] = $this->Mod_tanam->total_rows();
+        $data['fakultas'] = $this->Mod_fakultas->total_rows();
+        $data['prodi'] = $this->Mod_prodi->total_rows();
 
         $logged_in = $this->session->userdata('logged_in');
         if ($logged_in != TRUE || empty($logged_in)) {

@@ -4,11 +4,11 @@
 
     $(document).ready(function() {
 
-        table = $("#tabel-lahan").DataTable({
+        table = $("#tabel-prodi").DataTable({
             "responsive": true,
             "autoWidth": false,
             "language": {
-                "sEmptyTable": "Data Lahan Masih Kosong"
+                "sEmptyTable": "Data Prodi Masih Kosong"
             },
             "processing": true, //Feature control the processing indicator.
             "serverSide": true, //Feature control DataTables' server-side processing mode.
@@ -16,12 +16,12 @@
 
             // Load data for the table's content from an Ajax source
             "ajax": {
-                "url": "<?php echo site_url('lahan/ajax_list') ?>",
+                "url": "<?php echo site_url('prodi/ajax_list') ?>",
                 "type": "POST"
             },
             //Set column definition initialisation properties.
             "columnDefs": [{
-                "targets": [0, 1, 2, 3, 4],
+                "targets": [0, 1, 2, 3],
                 "className": 'text-center'
             }, {
                 "searchable": false,
@@ -30,7 +30,7 @@
             }, {
                 "targets": [-1], //last column
                 "render": function(data, type, row) {
-                    return "<a class=\"btn btn-xs btn-outline-primary\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit(" + row[4] + ")\"><i class=\"fas fa-edit\"></i> Ubah</a></div> <div class=\"d-inline mx-1\"><a class=\"btn btn-xs btn-outline-danger\" href=\"javascript:void(0)\" title=\"Delete\" onclick=\"del(" + row[4] + ")\"><i class=\"fas fa-trash\"></i> Hapus</a></div>";
+                    return "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" data-id=\"" + row[3] + "\"><i class=\"fas fa-edit\"></i> Ubah</a></div> <div class=\"d-inline mx-1\"><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\" data-id=\"" + row[3] + "\"><i class=\"fas fa-trash\"></i> Hapus</a></div>";
                 },
                 "orderable": false, //set not orderable
             }, ],
@@ -64,7 +64,8 @@
     });
 
     //delete
-    function del(id) {
+    $(document).on("click", ".delete", function() {
+        var id = $(this).attr("data-id");
 
         Swal.fire({
             title: 'Konfirmasi Hapus Data',
@@ -78,9 +79,9 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "<?php echo site_url('lahan/delete'); ?>",
+                    url: "<?php echo site_url('prodi/delete'); ?>",
                     type: "POST",
-                    data: "id_lahan=" + id,
+                    data: "id_prodi=" + id,
                     cache: false,
                     dataType: 'json',
                     success: function(respone) {
@@ -106,7 +107,7 @@
                 )
             }
         })
-    }
+    });
 
     function add() {
         save_method = 'add';
@@ -114,10 +115,11 @@
         $('.form-group').removeClass('has-error'); // clear error class
         $('.help-block').empty(); // clear error string
         $('#modal_form').modal('show'); // show bootstrap modal
-        $('.modal-title').text('Tambah Lahan'); // Set Title to Bootstrap modal title
+        $('.modal-title').text('Tambah Prodi'); // Set Title to Bootstrap modal title
     }
 
-    function edit(id) {
+    $(document).on("click", ".edit", function() {
+        var id = $(this).attr("data-id");
         save_method = 'update';
         $('#form')[0].reset(); // reset form on modals
         $('.form-group').removeClass('has-error'); // clear error class
@@ -125,24 +127,23 @@
 
         //Ajax Load data from ajax
         $.ajax({
-            url: "<?php echo site_url('lahan/edit') ?>/" + id,
+            url: "<?php echo site_url('prodi/edit') ?>/" + id,
             type: "GET",
             dataType: "JSON",
             success: function(data) {
-                $('[name="id_lahan"]').val(data.id_lahan);
-                $('[name="lokasi"]').val(data.lokasi);
-                $('[name="longitude"]').val(data.longitude);
-                $('[name="latitude"]').val(data.latitude);
+                $('[name="id_prodi"]').val(data.id_prodi);
+                $('[name="id_fakultas"]').val(data.id_fakultas);
+                $('[name="nama_prodi"]').val(data.nama_prodi);
 
                 $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-                $('.modal-title').text('Ubah Lahan'); // Set title to Bootstrap modal title
+                $('.modal-title').text('Ubah Prodi'); // Set title to Bootstrap modal title
 
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 alert('Error get data from ajax');
             }
         });
-    }
+    });
 
     function save() {
         $('#btnSave').text('Menyimpan...'); //change button text
@@ -150,9 +151,9 @@
         var url;
 
         if (save_method == 'add') {
-            url = "<?php echo site_url('lahan/insert') ?>";
+            url = "<?php echo site_url('prodi/insert') ?>";
         } else {
-            url = "<?php echo site_url('lahan/update') ?>";
+            url = "<?php echo site_url('prodi/update') ?>";
         }
         var formdata = new FormData($('#form')[0]);
         // ajax adding data to database
@@ -173,12 +174,12 @@
                     if (save_method == 'add') {
                         Toast.fire({
                             icon: 'success',
-                            title: 'Data Lahan Berhasil Disimpan!'
+                            title: 'Data Prodi Berhasil Disimpan!'
                         });
                     } else if (save_method == 'update') {
                         Toast.fire({
                             icon: 'success',
-                            title: 'Data Lahan Berhasil Diubah!'
+                            title: 'Data Prodi Berhasil Diubah!'
                         });
                     }
                 } else {

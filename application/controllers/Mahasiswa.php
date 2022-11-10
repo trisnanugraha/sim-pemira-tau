@@ -1,21 +1,20 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Panen extends MY_Controller
+class Mahasiswa extends MY_Controller
 {
 
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Mod_panen');
-        $this->load->model('Mod_lahan');
+        $this->load->model('Mod_mahasiswa');
     }
 
     public function index()
     {
-        $data['judul'] = 'Panen';
-        $data['lahan'] = $this->Mod_lahan->get_all();
-        $data['modal_tambah'] = show_my_modal('panen/modal_tambah_panen', $data);
+        $data['judul'] = 'Data Mahasiswa';
+        $data['paslon'] = $this->Mod_mahasiswa->get_all();
+        $data['modal_tambah'] = show_my_modal('mahasiswa/modal_tambah_mahasiswa', $data);
 
         $logged_in = $this->session->userdata('logged_in');
         if ($logged_in != TRUE || empty($logged_in)) {
@@ -23,12 +22,9 @@ class Panen extends MY_Controller
         } else {
             $checklevel = $this->session->userdata('hak_akses');
 
-            if ($checklevel == 'Guest') {
-                $js = $this->load->view('panen/panen-guest-js', null, true);
-                $this->template->views('panen/home-guest', $data, $js);
-            } else {
-                $js = $this->load->view('panen/panen-js', null, true);
-                $this->template->views('panen/home', $data, $js);
+            if ($checklevel != 'Guest') {
+                $js = $this->load->view('mahasiswa/mahasiswa-js', null, true);
+                $this->template->views('mahasiswa/home', $data, $js);
             }
         }
     }
@@ -37,23 +33,23 @@ class Panen extends MY_Controller
     {
         ini_set('memory_limit', '512M');
         set_time_limit(3600);
-        $list = $this->Mod_panen->get_datatables();
+        $list = $this->Mod_mahasiswa->get_datatables();
         $data = array();
         $no = $_POST['start'];
-        foreach ($list as $panen) {
+        foreach ($list as $mhs) {
             $no++;
             $row = array();
             $row[] = $no;
-            $row[] = $panen->jumlah_panen;
-            $row[] = $panen->jumlah_hasil;
-            $row[] = $panen->id_panen;
+            $row[] = $mhs->jumlah_panen;
+            $row[] = $mhs->jumlah_hasil;
+            $row[] = $mhs->id_panen;
             $data[] = $row;
         }
 
         $output = array(
             "draw" => $_POST['draw'],
-            "recordsTotal" => $this->Mod_panen->count_all(),
-            "recordsFiltered" => $this->Mod_panen->count_filtered(),
+            "recordsTotal" => $this->Mod_mahasiswa->count_all(),
+            "recordsFiltered" => $this->Mod_mahasiswa->count_filtered(),
             "data" => $data,
         );
         //output to json format
@@ -134,4 +130,4 @@ class Panen extends MY_Controller
     }
 }
 
-/* End of file Panen.php */
+/* End of file Paslon.php */

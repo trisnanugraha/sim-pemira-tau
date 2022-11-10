@@ -12,17 +12,11 @@
             </div>
             <div class="modal-body form">
                 <form action="#" id="form" class="form-horizontal">
-                    <input type="hidden" value="" name="id_produksi" />
+                    <input type="hidden" value="" name="id_fakultas" />
                     <div class="form-group row ">
-                        <label for="judul" class="col-sm-2 col-form-label">Kode Produksi</label>
+                        <label for="nama_fakultas" class="col-sm-2 col-form-label">Nama Fakultas</label>
                         <div class="col-sm-10 kosong">
-                            <input type="text" class="form-control" name="kd_produksi" id="kd_produksi" placeholder="Kode Produksi">
-                        </div>
-                    </div>
-                    <div class="form-group row ">
-                        <label for="judul" class="col-sm-2 col-form-label">Nama Produksi</label>
-                        <div class="col-sm-10 kosong">
-                            <input type="text" class="form-control" name="nama_produksi" id="nama_produksi" placeholder="Nama Produksi">
+                            <input type="text" class="form-control" name="nama_fakultas" id="nama_fakultas">
                         </div>
                     </div>
                 </form>

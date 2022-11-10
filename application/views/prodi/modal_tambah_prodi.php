@@ -12,29 +12,23 @@
             </div>
             <div class="modal-body form">
                 <form action="#" id="form" class="form-horizontal">
-                    <input type="hidden" value="" name="id_panen" />
+                    <input type="hidden" value="" name="id_prodi" />
                     <div class="form-group row ">
-                    <label for="cluster" class="col-sm-2 col-form-label">Lahan</label>
+                        <label for="id_fakultas" class="col-sm-2 col-form-label">Fakultas</label>
                         <div class="col-sm-10 kosong">
-                            <select class="form-control select2" name="id_lahan" id="id_lahan">
-                                <option value="0" selected disabled>-- Pilih Lahan --</option>
+                            <select class="form-control select2" name="id_fakultas" id="id_fakultas">
+                                <option value="0" selected disabled>-- Pilih Fakultas --</option>
                                 <?php
-                                foreach ($lahan as $l) { ?>
-                                    <option value="<?= $l->id_lahan; ?>"><?= $l->lokasi; ?></option>
+                                foreach ($fakultas as $f) { ?>
+                                    <option value="<?= $f->id_fakultas; ?>"><?= $f->nama_fakultas; ?></option>
                                 <?php } ?>
                             </select>
                         </div>
                     </div>
                     <div class="form-group row ">
-                        <label for="judul" class="col-sm-2 col-form-label">Jumlah Panen</label>
+                        <label for="nama_prodi" class="col-sm-2 col-form-label">Nama Prodi</label>
                         <div class="col-sm-10 kosong">
-                            <input type="number" class="form-control" name="jumlah_panen" id="jumlah_panen" placeholder="Jumlah Panen">
-                        </div>
-                    </div>
-                    <div class="form-group row ">
-                        <label for="judul" class="col-sm-2 col-form-label">Jumlah Hasil</label>
-                        <div class="col-sm-10 kosong">
-                            <input type="number" class="form-control" name="jumlah_hasil" id="jumlah_hasil" placeholder="Jumlah Hasil">
+                            <input type="text" class="form-control" name="nama_prodi" id="nama_prodi">
                         </div>
                     </div>
                 </form>

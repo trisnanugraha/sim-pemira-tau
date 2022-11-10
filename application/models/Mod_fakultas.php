@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Mod_budidaya extends CI_Model
+class Mod_fakultas extends CI_Model
 {
 
-    var $table = 'tbl_budidaya';
-    var $column_order = array('','kd_produksi', 'nama_produksi');
-    var $column_search = array('kd_produksi', 'nama_produksi');
-    var $order = array('id_produksi' => 'asc'); // default order 
+    var $table = 'tbl_fakultas';
+    var $column_order = array('', 'nama_fakultas');
+    var $column_search = array('nama_fakultas');
+    var $order = array('id_fakultas' => 'asc'); // default order 
 
     public function __construct()
     {
@@ -76,9 +76,9 @@ class Mod_budidaya extends CI_Model
             ->result();
     }
 
-    function get_budidaya($id)
+    function get_fakultas($id)
     {
-        $this->db->where('id_produksi', $id);
+        $this->db->where('id_fakultas', $id);
         return $this->db->get($this->table)->row();
     }
 
@@ -90,13 +90,13 @@ class Mod_budidaya extends CI_Model
 
     function update($id, $data)
     {
-        $this->db->where('id_produksi', $id);
+        $this->db->where('id_fakultas', $id);
         $this->db->update($this->table, $data);
     }
 
     function delete($id)
     {
-        $this->db->where('id_produksi', $id);
+        $this->db->where('id_fakultas', $id);
         $this->db->delete($this->table);
     }
 
@@ -107,4 +107,4 @@ class Mod_budidaya extends CI_Model
     }
 }
 
-/* End of file Mod_budidaya.php */
+/* End of file Mod_fakultas.php */

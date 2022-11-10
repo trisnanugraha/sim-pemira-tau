@@ -4,11 +4,11 @@
 
     $(document).ready(function() {
 
-        table = $("#tabel-panen").DataTable({
+        table = $("#tabel-fakultas").DataTable({
             "responsive": true,
             "autoWidth": false,
             "language": {
-                "sEmptyTable": "Data Panen Masih Kosong"
+                "sEmptyTable": "Data Fakultas Masih Kosong"
             },
             "processing": true, //Feature control the processing indicator.
             "serverSide": true, //Feature control DataTables' server-side processing mode.
@@ -16,12 +16,12 @@
 
             // Load data for the table's content from an Ajax source
             "ajax": {
-                "url": "<?php echo site_url('panen/ajax_list') ?>",
+                "url": "<?php echo site_url('fakultas/ajax_list') ?>",
                 "type": "POST"
             },
             //Set column definition initialisation properties.
             "columnDefs": [{
-                "targets": [0, 1, 2, 3],
+                "targets": [0, 1, 2],
                 "className": 'text-center'
             }, {
                 "searchable": false,
@@ -30,7 +30,7 @@
             }, {
                 "targets": [-1], //last column
                 "render": function(data, type, row) {
-                    return "<a class=\"btn btn-xs btn-outline-primary\" href=\"javascript:void(0)\" title=\"Edit\" onclick=\"edit(" + row[3] + ")\"><i class=\"fas fa-edit\"></i> Ubah</a></div> <div class=\"d-inline mx-1\"><a class=\"btn btn-xs btn-outline-danger\" href=\"javascript:void(0)\" title=\"Delete\" onclick=\"del(" + row[3] + ")\"><i class=\"fas fa-trash\"></i> Hapus</a></div>";
+                    return "<a class=\"btn btn-xs btn-outline-primary edit\" href=\"javascript:void(0)\" title=\"Edit\" data-id=\"" + row[2] + "\"><i class=\"fas fa-edit\"></i> Ubah</a></div> <div class=\"d-inline mx-1\"><a class=\"btn btn-xs btn-outline-danger delete\" href=\"javascript:void(0)\" title=\"Delete\" data-id=\"" + row[2] + "\"><i class=\"fas fa-trash\"></i> Hapus</a></div>";
                 },
                 "orderable": false, //set not orderable
             }, ],
@@ -64,7 +64,8 @@
     });
 
     //delete
-    function del(id) {
+    $(document).on("click", ".delete", function() {
+        var id = $(this).attr("data-id");
 
         Swal.fire({
             title: 'Konfirmasi Hapus Data',
@@ -78,9 +79,9 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "<?php echo site_url('panen/delete'); ?>",
+                    url: "<?php echo site_url('fakultas/delete'); ?>",
                     type: "POST",
-                    data: "id_panen=" + id,
+                    data: "id_fakultas=" + id,
                     cache: false,
                     dataType: 'json',
                     success: function(respone) {
@@ -106,7 +107,7 @@
                 )
             }
         })
-    }
+    });
 
     function add() {
         save_method = 'add';
@@ -114,10 +115,11 @@
         $('.form-group').removeClass('has-error'); // clear error class
         $('.help-block').empty(); // clear error string
         $('#modal_form').modal('show'); // show bootstrap modal
-        $('.modal-title').text('Tambah Panen'); // Set Title to Bootstrap modal title
+        $('.modal-title').text('Tambah Fakultas'); // Set Title to Bootstrap modal title
     }
 
-    function edit(id) {
+    $(document).on("click", ".edit", function() {
+        var id = $(this).attr("data-id");
         save_method = 'update';
         $('#form')[0].reset(); // reset form on modals
         $('.form-group').removeClass('has-error'); // clear error class
@@ -125,24 +127,22 @@
 
         //Ajax Load data from ajax
         $.ajax({
-            url: "<?php echo site_url('panen/edit') ?>/" + id,
+            url: "<?php echo site_url('fakultas/edit') ?>/" + id,
             type: "GET",
             dataType: "JSON",
             success: function(data) {
-                $('[name="id_panen"]').val(data.id_panen);
-                $('[name="id_lahan"]').val(data.id_lahan);
-                $('[name="jumlah_panen"]').val(data.jumlah_panen);
-                $('[name="jumlah_hasil"]').val(data.jumlah_hasil);
+                $('[name="id_fakultas"]').val(data.id_fakultas);
+                $('[name="nama_fakultas"]').val(data.nama_fakultas);
 
                 $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-                $('.modal-title').text('Ubah Panen'); // Set title to Bootstrap modal title
+                $('.modal-title').text('Ubah Fakultas'); // Set title to Bootstrap modal title
 
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 alert('Error get data from ajax');
             }
         });
-    }
+    });
 
     function save() {
         $('#btnSave').text('Menyimpan...'); //change button text
@@ -150,9 +150,9 @@
         var url;
 
         if (save_method == 'add') {
-            url = "<?php echo site_url('panen/insert') ?>";
+            url = "<?php echo site_url('fakultas/insert') ?>";
         } else {
-            url = "<?php echo site_url('panen/update') ?>";
+            url = "<?php echo site_url('fakultas/update') ?>";
         }
         var formdata = new FormData($('#form')[0]);
         // ajax adding data to database
@@ -173,12 +173,12 @@
                     if (save_method == 'add') {
                         Toast.fire({
                             icon: 'success',
-                            title: 'Data Panen Berhasil Disimpan!'
+                            title: 'Data Fakultas Berhasil Disimpan!'
                         });
                     } else if (save_method == 'update') {
                         Toast.fire({
                             icon: 'success',
-                            title: 'Data Panen Berhasil Diubah!'
+                            title: 'Data Fakultas Berhasil Diubah!'
                         });
                     }
                 } else {

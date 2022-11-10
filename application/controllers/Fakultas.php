@@ -1,19 +1,19 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Cluster extends MY_Controller
+class Fakultas extends MY_Controller
 {
 
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Mod_cluster');
+        $this->load->model('Mod_fakultas');
     }
 
     public function index()
     {
-        $data['judul'] = 'Cluster';
-        $data['modal_tambah_cluster'] = show_my_modal('cluster/modal_tambah_cluster', $data);
+        $data['judul'] = 'Data Fakultas';
+        $data['modal_tambah'] = show_my_modal('fakultas/modal_tambah_fakultas', $data);
 
         $logged_in = $this->session->userdata('logged_in');
         if ($logged_in != TRUE || empty($logged_in)) {
@@ -21,12 +21,9 @@ class Cluster extends MY_Controller
         } else {
             $checklevel = $this->session->userdata('hak_akses');
 
-            if ($checklevel == 'Guest') {
-                $js = $this->load->view('cluster/cluster-guest-js', null, true);
-                $this->template->views('cluster/home-guest', $data, $js);
-            } else {
-                $js = $this->load->view('cluster/cluster-js', null, true);
-                $this->template->views('cluster/home', $data, $js);
+            if ($checklevel != 'Guest') {
+                $js = $this->load->view('fakultas/fakultas-js', null, true);
+                $this->template->views('fakultas/home', $data, $js);
             }
         }
     }
@@ -35,22 +32,22 @@ class Cluster extends MY_Controller
     {
         ini_set('memory_limit', '512M');
         set_time_limit(3600);
-        $list = $this->Mod_cluster->get_datatables();
+        $list = $this->Mod_fakultas->get_datatables();
         $data = array();
         $no = $_POST['start'];
-        foreach ($list as $cluster) {
+        foreach ($list as $f) {
             $no++;
             $row = array();
             $row[] = $no;
-            $row[] = $cluster->nama_cluster;
-            $row[] = $cluster->id_cluster;
+            $row[] = $f->nama_fakultas;
+            $row[] = $f->id_fakultas;
             $data[] = $row;
         }
 
         $output = array(
             "draw" => $_POST['draw'],
-            "recordsTotal" => $this->Mod_cluster->count_all(),
-            "recordsFiltered" => $this->Mod_cluster->count_filtered(),
+            "recordsTotal" => $this->Mod_fakultas->count_all(),
+            "recordsFiltered" => $this->Mod_fakultas->count_filtered(),
             "data" => $data,
         );
         //output to json format
@@ -59,7 +56,7 @@ class Cluster extends MY_Controller
 
     public function edit($id)
     {
-        $data = $this->Mod_cluster->get_cluster($id);
+        $data = $this->Mod_fakultas->get_fakultas($id);
         echo json_encode($data);
     }
 
@@ -69,29 +66,30 @@ class Cluster extends MY_Controller
 
         $post = $this->input->post();
 
-        $this->nama_cluster = $post['nama_cluster'];
+        $this->id_fakultas = random_string('alnum', 25);
+        $this->nama_fakultas = $post['nama_fakultas'];
 
-        $this->Mod_cluster->insert($this);
+        $this->Mod_fakultas->insert($this);
         echo json_encode(array("status" => TRUE));
     }
 
     public function update()
     {
         $this->_validate();
-        $id      = $this->input->post('id_cluster');
+        $id      = $this->input->post('id_fakultas');
         $post = $this->input->post();
 
-        $this->nama_cluster = $post['nama_cluster'];
+        $this->nama_fakultas = $post['nama_fakultas'];
 
-        $this->Mod_cluster->update($id, $this);
+        $this->Mod_fakultas->update($id, $this);
         echo json_encode(array("status" => TRUE));
     }
 
     public function delete()
     {
-        $id = $this->input->post('id_cluster');
+        $id = $this->input->post('id_fakultas');
 
-        $this->Mod_cluster->delete($id);
+        $this->Mod_fakultas->delete($id);
         echo json_encode(array("status" => TRUE));
     }
 
@@ -102,9 +100,9 @@ class Cluster extends MY_Controller
         $data['inputerror'] = array();
         $data['status'] = TRUE;
 
-        if ($this->input->post('nama_cluster') == '') {
-            $data['inputerror'][] = 'nama_cluster';
-            $data['error_string'][] = 'Nama Cluster Tidak Boleh Kosong';
+        if ($this->input->post('nama_fakultas') == '') {
+            $data['inputerror'][] = 'nama_fakultas';
+            $data['error_string'][] = 'Nama Fakultas Tidak Boleh Kosong';
             $data['status'] = FALSE;
         }
 
@@ -115,4 +113,4 @@ class Cluster extends MY_Controller
     }
 }
 
-/* End of file Cluster.php */
+/* End of file Fakultas.php */

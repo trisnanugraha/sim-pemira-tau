@@ -6,17 +6,16 @@
                 <div class="card">
                     <div class="card-header bg-light">
                         <div class="text-left"> 
-                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="add()" title="Add Data"><i class="fas fa-plus"></i> Tambah Panen</button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="add()" title="Add Data"><i class="fas fa-plus"></i> Tambah Fakultas</button>
                         </div>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="tabel-panen" class="table table-bordered table-striped table-hover">
+                        <table id="tabel-fakultas" class="table table-bordered table-striped table-hover">
                             <thead>
                                 <tr class="bg-info text-center">
                                     <th>No.</th>
-                                    <th>Jumlah Panen</th>
-                                    <th>Jumlah Hasil</th>
+                                    <th>Nama Fakultas</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>

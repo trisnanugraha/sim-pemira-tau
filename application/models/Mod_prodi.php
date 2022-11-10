@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Mod_pemupukan extends CI_Model
+class Mod_prodi extends CI_Model
 {
 
-    var $table = 'tbl_pemupukan';
-    var $column_order = array('', 'lokasi', 'tgl_pemupukan', 'jumlah_pupuk', 'lama_pupuk');
-    var $column_search = array('lokasi', 'tgl_pemupukan', 'jumlah_pupuk', 'lama_pupuk');
-    var $order = array('id_pemupukan' => 'asc'); // default order 
+    var $table = 'tbl_prodi';
+    var $column_order = array('', 'a.nama_prodi', 'b.nama_fakultas');
+    var $column_search = array('a.nama_prodi', 'b.nama_fakultas');
+    var $order = array('a.id_prodi' => 'asc'); // default order 
 
     public function __construct()
     {
@@ -16,11 +16,10 @@ class Mod_pemupukan extends CI_Model
     }
     private function _get_datatables_query()
     {
-
-        $this->db->select('a.*,b.lokasi');
-        $this->db->join('tbl_lahan b', 'a.id_lahan=b.id_lahan');
+        $this->db->select('a.*,b.nama_fakultas');
+        $this->db->join('tbl_fakultas b', 'a.id_fakultas=b.id_fakultas');
         $this->db->from("{$this->table} a");
-        $this->db->order_by('a.id_pemupukan', 'asc');
+        $this->db->order_by('a.id_prodi', 'asc');
 
         $i = 0;
 
@@ -81,18 +80,10 @@ class Mod_pemupukan extends CI_Model
             ->result();
     }
 
-    function get_pemupukan($id)
+    function get_prodi($id)
     {
-        $this->db->where('id_pemupukan', $id);
+        $this->db->where('id_prodi', $id);
         return $this->db->get($this->table)->row();
-    }
-
-    function get_foto($id)
-    {
-        $this->db->select('foto, foto2, foto3');
-        $this->db->from($this->table);
-        $this->db->where('id_kegiatan', $id);
-        return $this->db->get();
     }
 
     function insert($data)
@@ -103,13 +94,13 @@ class Mod_pemupukan extends CI_Model
 
     function update($id, $data)
     {
-        $this->db->where('id_pemupukan', $id);
+        $this->db->where('id_prodi', $id);
         $this->db->update($this->table, $data);
     }
 
     function delete($id)
     {
-        $this->db->where('id_pemupukan', $id);
+        $this->db->where('id_prodi', $id);
         $this->db->delete($this->table);
     }
 
@@ -120,4 +111,4 @@ class Mod_pemupukan extends CI_Model
     }
 }
 
-/* End of file Mod_pemupukan.php */
+/* End of file Mod_prodi.php */
