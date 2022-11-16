@@ -17,6 +17,8 @@ class Dashboard extends MY_Controller
         $this->load->model('Mod_dashboard');
         $this->load->model('Mod_fakultas');
         $this->load->model('Mod_prodi');
+        $this->load->model('Mod_tahun_angkatan');
+        $this->load->model('Mod_mahasiswa');
         // backButtonHandle();
     }
 
@@ -25,6 +27,8 @@ class Dashboard extends MY_Controller
         $data['judul'] = 'Dashboard';
         $data['fakultas'] = $this->Mod_fakultas->total_rows();
         $data['prodi'] = $this->Mod_prodi->total_rows();
+        $data['tahun_angkatan'] = $this->Mod_tahun_angkatan->total_rows();
+        $data['mahasiswa'] = $this->Mod_mahasiswa->total_rows();
 
         $logged_in = $this->session->userdata('logged_in');
         if ($logged_in != TRUE || empty($logged_in)) {
